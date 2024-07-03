@@ -1,0 +1,84 @@
+#CVE AS PARENT
+type cveParent {
+    id: ID!
+    name: String!
+    description: String!
+    baseMetric: [baseMetric]
+    publishedDate: String
+    lastModifiedDate: String
+    cwe: [cwe]
+    product: [productChild]
+}
+type baseMetric{
+    versionBaseMetric: String
+    vectorString: String
+    baseScore: Float
+    baseSeverity: String
+    exploitabilityScore: Float
+    impactScore: Float
+}
+type cwe{
+    id:ID!
+    cwe:String!
+}
+type productChild{
+    id:ID!
+    product:String!
+    vendor:Vendor
+    cpe:[cpe]
+}
+type Vendor{
+    id:ID!
+    vendor:String!
+}
+type cpe{
+    id: ID!
+    part: String
+    version: String
+    update_version: String
+    edition: String
+    version_start: String
+    version_end: String
+    sw_edition: String
+    target: String
+}
+
+#PODUCT AS PARENT
+type productParent{
+    id:ID!
+    product:String!
+    cve:[cveChild]
+    vendor:Vendor
+}
+type cveChild{
+    id: ID!
+    name: String!
+    description: String!
+    baseMetric: [baseMetric]
+    publishedDate: String
+    lastModifiedDate: String
+    cwe:[cwe]
+    cpe:[cpe]
+}
+
+#VENDOR AS PARENT
+type vendorParent{
+    id:ID!
+    vendor:String!
+    product:[productVendor]
+}
+type productVendor{
+    id:ID!
+    product:String!
+    cve:[cveChild]
+}
+
+#QUERY
+type Query {
+    cveById(id: ID!): cveParent
+    productById(id: ID!): productParent
+    vendorById(id: ID!): vendorParent
+    searchProduct(limit: Int, page: Int, search: String): [productParent]
+    searchCve(limit: Int, page: Int, search: String): [cveParent]
+    searchVendor(limit: Int, page: Int, search: String): [vendorParent]
+}
