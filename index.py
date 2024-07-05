@@ -6,7 +6,12 @@ from resolver import *
 type_defs = load_schema_from_path("schema.graphql")
 
 # 2. Membuat Skema Eksekusi
+<<<<<<< HEAD
 schema = make_executable_schema(type_defs, query, cve, product, vendor)
+=======
+schema = make_executable_schema(type_defs, query, cveID, productChild, 
+                                productParent, cveChild, vendorParent, productVendor)
+>>>>>>> 0918d02fbc8289cbd198688e6f6a5187bf561170
 
 # 3. Membuat Aplikasi GraphQL ASGI
 app = GraphQL(schema, debug=True)
