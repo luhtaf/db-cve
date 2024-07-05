@@ -1,0 +1,92 @@
+—> VENDOR TO CVE
+LET vendorName = "nvidia"
+
+LET first=(FOR Vendor IN vendor_collection
+    FILTER Vendor.vendor == vendorName
+    RETURN Vendor._id)
+
+LET SECOND=(FOR i IN first
+    FOR v,e,p IN ANY i vendor_to_product
+    RETURN v._id)
+    
+FOR j IN SECOND
+    FOR v,e,p in ANY j cve_to_product
+    RETURN DISTINCT v
+
+—> CVE TO VENDOR
+LET cveName = "CVE-2023-31027"
+
+LET first=(FOR x IN cve_collection
+    FILTER x.name == cveName
+    RETURN x._id)
+
+LET SECOND=(FOR i IN first
+    FOR v,e,p IN ANY i cve_to_product
+    RETURN v._id)
+    
+FOR j IN SECOND
+    FOR v,e,p in ANY j vendor_to_product
+    RETURN DISTINCT v
+
+—> CVE TO PRODUCT
+LET cveName = "CVE-2023-31027"
+
+FOR x IN cve_collection
+ FILTER x.name == cveName
+ FOR v,e,p IN 1..1 OUTBOUND x cve_to_product
+    RETURN DISTINCT v
+
+—> CVE TO DETAIL PRODUCT
+LET cveName = "CVE-2023-31027"
+
+FOR x IN cve_collection
+ FILTER x.name == cveName
+ FOR v,e,p IN 1..1 OUTBOUND x cve_to_product
+    RETURN e
+
+—>  PRODUCT TO CVE
+LET productName = "fedora"
+
+FOR x IN product_collection
+ FILTER x.product == productName
+ FOR v,e,p IN 1..1 INBOUND x cve_to_product
+    RETURN DISTINCT v
+
+—>  PRODUCT TO VENDOR
+LET productName = "fedora"
+
+FOR x IN product_collection
+ FILTER x.product == productName
+ FOR v,e,p IN 1..1 INBOUND x vendor_to_product
+    RETURN DISTINCT v
+
+—> VENDOR TO PRODUCT
+LET VendorName = "nvidia"
+
+FOR x IN vendor_collection
+ FILTER x.vendor == VendorName
+ FOR v,e,p IN 1..1 OUTBOUND x vendor_to_product
+    RETURN DISTINCT v
+
+—> VENDOR TO DETAIL PRODUCT
+LET vendorName = "nvidia"
+
+LET first=(FOR Vendor IN vendor_collection
+    FILTER Vendor.vendor == vendorName
+    RETURN Vendor._id)
+
+LET SECOND=(FOR i IN first
+    FOR v,e,p IN ANY i vendor_to_product
+    RETURN v._id)
+    
+FOR j IN SECOND
+    FOR v,e,p in ANY j cve_to_product
+    RETURN DISTINCT e
+
+--> CVE TO CWE
+LET cveName = "CVE-1999-0001"
+
+FOR x IN cve_collection
+ FILTER x.name == cveName
+ FOR v,e,p IN 1..1 OUTBOUND x cve_to_cwe
+    RETURN DISTINCT v

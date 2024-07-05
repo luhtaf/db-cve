@@ -1,0 +1,60 @@
+type cve {
+    id: ID!
+    name: String!
+    description: String!
+    baseMetric: [baseMetric]
+    publishedDate: String
+    lastModifiedDate: String
+    cwe: [cwe]
+    product: [product]
+    cpe:[cpe]
+}
+
+type product {
+    id:ID!
+    product:String!
+    cve:[cve]
+    cpe:[cpe]
+    vendor:vendor
+}
+
+type vendor{
+    id:ID!
+    vendor:String!
+    product:[product]
+}
+
+type baseMetric{
+    versionBaseMetric: String
+    vectorString: String
+    baseScore: Float
+    baseSeverity: String
+    exploitabilityScore: Float
+    impactScore: Float
+}
+type cwe{
+    id:ID!
+    cwe:String!
+}
+
+type cpe{
+    id: ID!
+    part: String
+    version: String
+    update_version: String
+    edition: String
+    version_start: String
+    version_end: String
+    sw_edition: String
+    target: String
+}
+
+#QUERY
+type Query {
+    cveById(id: ID!): cve
+    productById(id: ID!): product
+    vendorById(id: ID!): vendor
+    searchProduct(limit: Int, page: Int, search: String): [product]
+    searchCve(limit: Int, page: Int, search: String): [cve]
+    searchVendor(limit: Int, page: Int, search: String): [vendor]
+}
